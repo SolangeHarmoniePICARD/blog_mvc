@@ -22,11 +22,28 @@ function post(){
 
 function addComment($postId, $author, $comment){
   $commentManager = new CommentManager();
-  $affectedLines = $commentManager->postComment($postId, $author, $comment);
-  if ($affectedLines === false) {
+  $commentAdded = $commentManager->postComment($postId, $author, $comment);
+  if ($commentAdded === false) {
     throw new Exception('Impossible d\'ajouter le commentaire !');
   }
   else {
     header('Location: index.php?action=post&id=' . $postId);
+  }
+}
+
+function viewComment(){
+  $commentManager = new CommentManager();
+  $comment = $commentManager->getComment($_GET['id']);
+  require('view/frontend/editCommentView.php');
+}
+
+
+function editComment($id, $comment) {
+  $commentManager = new CommentManager();
+  $newComment = $commentManager->updateComment($id, $comment);
+  if ($newComment === false) {
+    throw new Exception('Impossible de modifier le commentaire !');
+  } else {
+    header('Location: index.php');
   }
 }
